@@ -29,6 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['assets-tracking-coe.herokuapp.com', '127.0.0.1']
 ALLOWED_HOSTS = ['assets-tracking-testing.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['infinite-temple-49736.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['infinite-temple-49736.herokuapp.com', '0.0.0.0']
 
 
 
