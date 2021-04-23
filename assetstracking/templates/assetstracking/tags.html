@@ -1,0 +1,39 @@
+{%  extends 'assetstracking/main.html' %}
+{% load static %}
+{% block content %}
+
+		<br>
+
+		<div class="row">
+			<div class="col-md">
+				<div class="card card-body">
+					<h5>Products</h5>
+				</div>
+				<div class="card card-body">
+					<table class="table">
+						<tr>
+							<th>Asset ID</th>
+							<th>Name</th>
+							<th>Asset Current Location</th>
+							<th>Asset Status</th>
+
+						</tr>
+
+						{% for i in tags %}
+							{% if i.subscriber_id.subscriber_id == employee.subscriber_id.subscriber_id %}
+								<tr>
+									<td>{{i.tag_id}}</td>
+									<td>{{i.asset_name}}</td>
+									<td>{{i.asset_location}}</td>
+									<td>{{i.asset_status}}</td>
+								</tr>
+							{% endif %}
+
+						{% endfor %}
+                        		
+					</table>
+				</div>
+			</div>			
+		</div>
+
+{% endblock content %}

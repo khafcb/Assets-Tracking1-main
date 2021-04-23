@@ -1,0 +1,26 @@
+{%  extends 'assetstracking/main1.html' %}
+
+<!DOCTYPE html> 
+{% block content %}
+	 {% if perms.user.add_employee %}
+					<html>   
+					<head> Wait!
+						<title>HTML Redirect</title> 
+						<meta http-equiv="refresh"
+							content="0; url = subscriber/1/" /> 
+					</head>
+					</html>	
+	 {% else %}
+	        <html>   
+			<head> Wait!
+				<title>HTML Redirect</title> 
+				<meta http-equiv="refresh"
+					content= "1; url = employee/{{user.employee.id}}/" /> 
+			</head>
+            </html>	
+	 {% endif %}
+
+<h3>5 Seconds</h3>
+
+{% endblock content %}
+

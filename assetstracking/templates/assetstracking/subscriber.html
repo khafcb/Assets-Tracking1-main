@@ -1,0 +1,190 @@
+{% extends 'assetstracking/main.html' %}
+
+{% block content %}
+{% if perms.user.add_employee %}
+<br>
+
+<div class="row">
+	<!--div class="col-md">
+		<div class="card card-body">
+			<h5>Subscriber options:</h5>
+			<hr>
+			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'createAsset' %}">ADD asset</a>
+			<a class="btn btn-outline-info  btn-sm btn-block" href="">Add employee</a>
+		</div>
+	</div-->
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Subscriber Information</h5>
+			<hr>
+			<p>Name: {{subscriber.subscriber_name}} </p>
+			<p>Phone: {{subscriber.subscriber_id}} </p>
+		</div>
+	</div>
+</div>
+
+<br>
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Total Borrowing</h5>
+			<hr>
+			<h1 style="text-align: center;padding: 10px">{{borrowing_count}}</h1>
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Total Assets</h5>
+			<hr>
+			<h1 style="text-align: center;padding: 10px">{{tag_count}}</h1>
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Total RFID Readers</h5>
+			<hr>
+			<h1 style="text-align: center;padding: 10px">{{rfid_count}}</h1>
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Total Employee</h5>
+			<hr>
+			<h1 style="text-align: center;padding: 10px">{{employee_count}}</h1>
+		</div>
+	</div>
+</div>
+
+<br>
+
+<div class="row">
+	<div class="col-md">
+		<h5>Borrowing List</h5>
+		<div class="card card-body">
+
+			<table class="table table-sm">
+				<tr>
+					<th>Assets Borroweing ID</th>
+					<th>Employee</th>
+					<th>Asset</th>
+					<th>Start Date</th>
+					<th>End Date</th>
+					<th>Update</th>
+					<th>Remove</th>
+				</tr>
+				{% for i in borrowings %}
+				<tr>
+					<td>{{i.borrowing_id}}</td>
+					<td>{{i.employee_id}}</td>
+					<td>{{i.tag_id}}</td>
+					<td>{{i.start_date}}</td>
+					<td>{{i.end_date}}</td>
+					<td><a class="btn btn-sm btn-info" href="{% url 'updateBorrowing' i.id %}">Update</a></td>
+					<td><a class="btn btn-sm btn-danger" href="{% url 'deleteBorrowing' i.id %}">Remove</a></td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+</div>
+
+<br>
+
+<div class="row">
+	<div class="col-md">
+		<h5>Assets</h5>
+		<div class="card card-body">
+			<a class="btn btn-primary  btn-sm btn-block" href="{% url 'createAsset' %}">ADD Asset</a>
+			<table class="table table-sm">
+				<tr>
+					<th>Tag ID</th>
+					<th>Asset Name</th>
+					<th>Last RFID Reading Location</th>
+					<th>Update</th>
+					<th>Remove</th>
+				</tr>
+				{% for i in tags %}
+				<tr>
+					<td>{{i.tag_id}}</td>
+					<td>{{i.asset_name}}</td>
+					<th>{{i.asset_location}}</th>
+					<td><a class="btn btn-sm btn-info" href="{% url 'updateAsset' i.id %}">Update</a></td>
+					<td><a class="btn btn-sm btn-danger" href="{% url 'deleteAsset' i.id %}">Remove</a></td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+</div>
+
+<br>
+
+<div class="row">
+	<div class="col-md">
+		<h5>RFID Readers</h5>
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>RFID Reader ID</th>
+					<th>RFID Reader Location</th>
+				</tr>
+				{% for i in rfids %}
+				<tr>
+					<td>{{i.rfid_id}}</td>
+					<td>{{i.rfid_location}}</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+</div>
+
+<br>
+
+<div class="row">
+	<div class="col-md">
+		<h5>Employees</h5>
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>View</th>
+					<th>Employee ID</th>
+					<th>Employee Name</th>
+					<!--th>Update</th>
+					<th>Remove</th-->
+				</tr>
+				{% for i in employees %}
+				<tr>
+					<td><a class="btn btn-sm btn-info" href="{% url 'employee' i.id %}">View</a></td>
+					<td>{{i.employee_id}}</td>
+					<td>{{i.employee_name}}</td>
+					<!--td><a class="btn btn-sm btn-info" href="">Update</a></td>
+					<td><a class="btn btn-sm btn-danger" href="">Remove</a></td-->
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+</div>
+{% else %}
+<head>
+<style>
+p.ex1 {
+  font-size: 30px;
+}
+p.ex2 {
+  font-size: 50px;
+}
+</style>
+</head>
+<body>
+<p class="ex2">Done</p>
+
+</body>
+{% endif %}
+{% endblock %}
