@@ -20,7 +20,7 @@ urlpatterns = [
     path('deleteBorrowing/<str:pk>/', views.deleteBorrowing, name="deleteBorrowing"),
     path('extendBorrowing/<str:pk>/', views.extendBorrowing, name="extendBorrowing"),
 
-    path('createAsset/', views.createAsset, name="createAsset"),
+    path('createAsset/<str:asset11>/', views.createAsset, name="createAsset"),
     path('updateAsset/<str:pk>/', views.updateAsset, name="updateAsset"),
     path('deleteAsset/<str:pk>/', views.deleteAsset, name="deleteAsset"),
     
