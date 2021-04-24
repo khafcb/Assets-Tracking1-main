@@ -24,6 +24,9 @@ urlpatterns = [
     path('deleteAsset/<str:pk>/', views.deleteAsset, name="deleteAsset"),
     
     path('createReader/<str:reader>/', views.createReader, name="createReader"),
+    path('updateReader/<str:pk>/', views.updateReader, name="updateReader"),
+    path('deleteReader/<str:pk>/', views.deleteReader, name="deleteReader"),
+    
     
     path('SendingEmail/', views.SendingEmail, name="SendingEmail"),
 
