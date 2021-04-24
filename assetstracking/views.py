@@ -216,7 +216,7 @@ def updateAsset(request, pk):
             return redirect('/subscriber/1')
 
     context = {'form':form}
-    return render(request, 'assetstracking/createAsset.html', context)
+    return render(request, 'assetstracking/updateAsset.html', context)
 @login_required
 def deleteAsset(request, pk):
     asset = Tag.objects.get(id=pk)
