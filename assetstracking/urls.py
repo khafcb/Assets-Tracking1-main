@@ -16,7 +16,6 @@ urlpatterns = [
 
 
     path('createBorrowing/<str:pk>/', views.createBorrowing, name="createBorrowing"),
-    path('updateBorrowing/<str:borrowing_test>/', views.updateBorrowing, name="updateBorrowing"),
     path('deleteBorrowing/<str:pk>/', views.deleteBorrowing, name="deleteBorrowing"),
     path('extendBorrowing/<str:pk>/', views.extendBorrowing, name="extendBorrowing"),
 
