@@ -262,6 +262,30 @@ def createReader(request, reader):
     context = {'formset1': formset1}
     return render(request, 'assetstracking/createReader.html', context)
 
+@login_required
+def updateReader(request, pk):
+    reader = RFID.objects.get(id=pk)
+    form = readerForm(instance=reader)
+
+    if request.method == 'POST':
+        form = readerForm(request.POST, instance=reader)
+        if form.is_valid():
+            form.save()
+            return redirect('/subscriber/1')
+
+    context = {'form':form}
+    return render(request, 'assetstracking/updateReader.html', context)
+
+@login_required
+def deleteReader(request, pk):
+    reader = RFID.objects.get(id=pk)
+    if request.method == "POST":
+        reader.delete()
+        return redirect('/subscriber/1')
+    context = {'item': asset}
+    return render(request, 'assetstracking/deleteReader.html',context)
+
+
 @csrf_exempt
 def packet(request):
     assets_list = Tag.objects.all()
