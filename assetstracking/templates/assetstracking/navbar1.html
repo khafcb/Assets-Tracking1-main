@@ -15,9 +15,9 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'logout' %}">Logout</a>
       </li>
-      <li class="nav-item active">
+      <li class="text-white nav-item active">
         {% if perms.user.add_employee %}
-              <h5 class="nav-item">.....Welcome</h5>
+              <h5 class="nav-item">..........Welcome..............</h5>
           {% else %}
               <a class="nav-link" href="{% url 'login' %}">You do not have permission to do something in the app</a>
           {% endif %}
