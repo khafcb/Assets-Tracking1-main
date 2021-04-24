@@ -282,7 +282,7 @@ def deleteReader(request, pk):
     if request.method == "POST":
         reader.delete()
         return redirect('/subscriber/1')
-    context = {'item': asset}
+    context = {'item': reader}
     return render(request, 'assetstracking/deleteReader.html',context)
 
 
