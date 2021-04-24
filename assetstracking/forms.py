@@ -24,3 +24,8 @@ class extendingForm(ModelForm):
     class Meta:
         model = Borrowing
         fields = ['end_date']
+        
+class readerForm(ModelForm):
+    class Meta:
+        model = RFID
+        fields=['rfid_id', 'rfid_location']
