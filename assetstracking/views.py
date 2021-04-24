@@ -312,12 +312,19 @@ def packet(request):
                                             update_employee_checker.save()
                                             update_employee_checker.reader_code = reader_id0[0:3]
                                             update_employee_checker.save()
-                                            return HttpResponse("scan asset", content_type='text/plain')
-                                            break
+                                            x = 1
+                                            if count0 == (a):
+                                                return HttpResponse("scan asset", content_type='text/plain')
+                                                break
+                                            continue
                                         elif count0 == (a):
-                                            print("There is no request for this employee id")
-                                            return HttpResponse("no request for employee", content_type='text/plain')
-                                            break
+                                            if x == 1:
+                                                return HttpResponse("scan asset", content_type='text/plain')
+                                                break
+                                            else:
+                                                return HttpResponse("no request for employee",content_type='text/plain')
+                                                break
+
                                         else:
                                             continue
                                     break
