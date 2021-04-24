@@ -23,6 +23,8 @@ urlpatterns = [
     path('updateAsset/<str:pk>/', views.updateAsset, name="updateAsset"),
     path('deleteAsset/<str:pk>/', views.deleteAsset, name="deleteAsset"),
     
+    path('createReader/<str:reader>/', views.createReader, name="createReader"),
+    
     path('SendingEmail/', views.SendingEmail, name="SendingEmail"),
 
 
