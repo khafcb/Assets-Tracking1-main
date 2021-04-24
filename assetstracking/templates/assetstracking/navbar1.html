@@ -17,14 +17,18 @@
       </li>
       <li class="nav-item active">
         {% if perms.user.add_employee %}
-              <a class="nav-link" href="{% url 'login' %}">Welcome</a>
+              <h5 class="nav-item">.....Welcome</h5>
           {% else %}
               <a class="nav-link" href="{% url 'login' %}">You do not have permission to do something in the app</a>
           {% endif %}
       </li>
 	 {% if user.is_authenticated %}
-       <li class="text-white nav-item active"> User: {{ user.get_username }}</li>
-	   <li class="text-white nav-item active">........Name of employee: {{ user.employee.employee_name }}</li>
+       <li class="text-white nav-item active"> 
+	       <h5> User: {{ user.get_username }}</h5>
+	</li>
+	   <li class="text-white nav-item active">
+		    <h5>........Name of employee: {{ user.employee.employee_name }} </h5>
+	  </li>
 	 {% else %}
        <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
 	 {% endif %}
