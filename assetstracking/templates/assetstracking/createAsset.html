@@ -1,5 +1,7 @@
 {%  extends 'assetstracking/main.html' %}
 {% load static %}
+{%load crispy_forms_tags %} 
+
 {% block content %}
 
 
@@ -11,7 +13,7 @@
 				{% csrf_token %}
 				{{ formset1.management_form }}
 				{% for form in formset1 %}
-				    {{form}}
+				    {{form|crispy }}
 					<hr>
 				{% endfor %}
 				<input type="submit" name="Submit">
