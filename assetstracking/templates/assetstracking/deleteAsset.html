@@ -13,7 +13,7 @@
 			<form action="{% url 'deleteAsset' item.id  %}" method="POST">
 				
 				{% csrf_token %}
-				<a class="btn btn-warning" href="{% url 'subscriber' %}">Cancel</a>
+				<a class="btn btn-warning" href="{% url 'subscriber' user.employee.subscriber_id.subscriber_id %}">Cancel</a>
 
 				<input class="btn btn-danger" type="submit" name="Confirm">
 			</form>
