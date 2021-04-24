@@ -8,7 +8,7 @@ from datetime import date
 from django.forms import inlineformset_factory
 # Create your views here.
 from .models import *
-from .forms import BorrowingForm, BorrowingFormEmployee, AssetForm
+from .forms import *
 from django.core.mail import send_mail
 
 def login(request):
@@ -132,7 +132,7 @@ def index(request):
 def createBorrowing(request, pk):
 
     employee = Employee.objects.get(id=pk)
-    BorrowingFormSet = inlineformset_factory(Employee, Borrowing, fields=('end_date', 'tag_id', 'subscriber_id'))
+    BorrowingFormSet = inlineformset_factory(Employee, Borrowing, form=BorrowingForm)
 
 
 
@@ -148,20 +148,7 @@ def createBorrowing(request, pk):
     context = {'formset':formset}
     return render(request, 'assetstracking/createBorrowing.html', context)
 
-@login_required
-def updateBorrowing(request, borrowing_test):
-    BorrowingFormSet = inlineformset_factory(Employee, Borrowing, fields=('end_date','tag_id'))
-    borrowing = Borrowing.objects.get(id=borrowing_test)
-    formset = BorrowingFormSet(queryset=Borrowing.objects.none(), instance=borrowing)
 
-    if request.method == 'POST':
-        formset = BorrowingFormSet(request.POST, instance=borrowing)
-        if formset.is_valid():
-            formset.save()
-            return redirect('/login')
-
-    context = {'formset':formset}
-    return render(request, 'assetstracking/createBorrowing.html', context)
 
 @login_required
 def deleteBorrowing(request, pk):
@@ -173,9 +160,8 @@ def deleteBorrowing(request, pk):
     return render(request, 'assetstracking/deleteBorrowing.html',context)
 @login_required
 def extendBorrowing(request, pk):
-
     borrowing = Borrowing.objects.get(id=pk)
-    form = BorrowingFormEmployee(instance=borrowing)
+    form = extendingForm(instance=borrowing)
 
     if request.method == 'POST':
         form = BorrowingForm(request.POST, instance=borrowing)
@@ -183,15 +169,15 @@ def extendBorrowing(request, pk):
             form.save()
             return redirect('/subscriber/1')
 
-    context = {'form':form}
-    return render(request, 'assetstracking/createBorrowing.html', context)
+    context = {'form': form}
+    return render(request, 'assetstracking/extendBorrowing.html', context)
 
 
 @login_required
 def createAsset(request, asset11):
     subscriber11 = Subscriber.objects.get(subscriber_id=asset11)
 
-    AddingFormSet = inlineformset_factory(Subscriber, Tag, fk_name="subscriber_id", fields=['tag_id', 'asset_name', 'rfid_id', 'asset_status', 'asset_location'])
+    AddingFormSet = inlineformset_factory(Subscriber, Tag, fk_name="subscriber_id", form=AssetForm)
 
     formset1 = AddingFormSet(queryset=Tag.objects.none(), instance=subscriber11)
     if request.method == 'POST':
@@ -241,6 +227,7 @@ def packet(request):
     count0 = 0
     count1 = 0
     count2 = 0
+    x = 0
     if request.method == "POST":
         client_username = request.POST.__getitem__('username')
         client_password = request.POST.__getitem__('password')
@@ -313,12 +300,14 @@ def packet(request):
                                             update_employee_checker.reader_code = reader_id0[0:3]
                                             update_employee_checker.save()
                                             x = 1
+                                            print("This is x value : " + str(x))
                                             if count0 == (a):
                                                 return HttpResponse("scan asset", content_type='text/plain')
                                                 break
                                             continue
                                         elif count0 == (a):
                                             if x == 1:
+                                                print("Just checking")
                                                 return HttpResponse("scan asset", content_type='text/plain')
                                                 break
                                             else:
