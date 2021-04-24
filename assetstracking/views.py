@@ -16,6 +16,8 @@ def login(request):
     return render(request, 'assetstracking/login.html', context)
 
 
+
+
 def SendingEmail(request):
     today = date.today()
     CurrentYear = today.strftime('%Y')
@@ -134,7 +136,8 @@ def createBorrowing(request, pk):
     employee = Employee.objects.get(id=pk)
     BorrowingFormSet = inlineformset_factory(Employee, Borrowing, form=BorrowingForm)
 
-
+    takenAssets = []
+    count = 0
 
     formset = BorrowingFormSet(queryset=Borrowing.objects.none(), instance=employee)
     if request.method == 'POST':
@@ -143,7 +146,36 @@ def createBorrowing(request, pk):
         formset = BorrowingFormSet(request.POST, instance=employee)
         if formset.is_valid():
             formset.save()
-            return redirect('/login')
+            x = 0
+            Borrowings = Borrowing.objects.all()
+            borrowingCount = Borrowings.count()
+            for b in Borrowings:
+                count +=1
+                asset_status = b.tag_id.asset_status
+                employee_id_scanned = b.employee_id_scanned
+                asset_id_scanned = b.asset_id_scanned
+                print(asset_status)
+                print(employee_id_scanned)
+                print(asset_id_scanned)
+                if asset_status == "Taken" and employee_id_scanned == 0 and asset_id_scanned == 0:
+                    b.delete()
+                    takenAssets.append(b.tag_id)
+                    x = 1
+                    if count == borrowingCount:
+                        context1 = {'items': takenAssets}
+                        return render(request, 'assetstracking/takenAssets.html', context1)
+                        break
+                elif count == borrowingCount:
+                    if x == 0:
+                        return redirect('/login')
+                        break
+                    else:
+                        context1= {'items': takenAssets}
+                        return render(request, 'assetstracking/takenAssets.html', context1)
+                        break
+                else:
+                    continue
+
 
     context = {'formset':formset}
     return render(request, 'assetstracking/createBorrowing.html', context)
