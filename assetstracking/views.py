@@ -243,7 +243,24 @@ def deleteAsset(request, pk):
         return redirect('/subscriber/1')
     context = {'item': asset}
     return render(request, 'assetstracking/deleteAsset.html',context)
-    
+
+@login_required
+def createReader(request, reader):
+    subscriber11 = Subscriber.objects.get(subscriber_id=reader)
+
+    AddingReaderFormSet = inlineformset_factory(Subscriber, RFID, fk_name="subscriber_id", form=readerForm)
+
+    formset1 = AddingReaderFormSet(queryset=RFID.objects.none(), instance=subscriber11)
+    if request.method == 'POST':
+        # print('Printing POST:', request.POST)
+        # form = BorrowingForm(request.POST)
+        formset1 = AddingReaderFormSet(request.POST, instance=subscriber11)
+        if formset1.is_valid():
+            formset1.save()
+            return redirect('/subscriber/1')
+
+    context = {'formset1': formset1}
+    return render(request, 'assetstracking/createReader.html', context)
 
 @csrf_exempt
 def packet(request):
