@@ -60,20 +60,18 @@
 
 			<table class="table table-sm">
 				<tr>
-					<th>Assets Borroweing ID</th>
 					<th>Employee</th>
 					<th>Asset</th>
 					<th>Start Date</th>
 					<th>End Date</th>
 					<th>Employee ID Scan checker</th>
 					<th>Asset ID Scan checker</th>
-					<th>Reader Where the asset was scanned</th>
+					<th>Reader Area Code</th>
 					<th>Extend</th>
 					<th>Remove</th>
 				</tr>
 				{% for i in borrowings %}
 				<tr>
-					<td>{{i.borrowing_id}}</td>
 					<td>{{i.employee_id}}</td>
 					<td>{{i.tag_id}}</td>
 					<td>{{i.start_date}}</td>
