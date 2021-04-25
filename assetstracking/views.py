@@ -178,13 +178,17 @@ def createBorrowing(request, pk):
 @login_required
 def deleteBorrowing(request, pk):
     borrowing = Borrowing.objects.get(id=pk)
+    borrowing_tag_id = borrowing.tag_id.tag_id
     tags = Tag.objects.all()
     tagscount = tags.count()
     if request.method == "POST":
         for tag in tags:
-            if borrowing.tag_id == tag:
-                tag.asset_status == "Available"
-                tag.save()
+            id = model_to_dict(tag)["id"]
+            tag_id = model_to_dict(tag)["tag_id"]
+            if str(borrowing_tag_id) == str(tag_id):
+                updatedStatus = tags.get(id=id)
+                updatedStatus.asset_status = "Available"
+                updatedStatus.save()
                 break
         borrowing.delete()
         return redirect('/subscriber/1')
