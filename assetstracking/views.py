@@ -186,7 +186,10 @@ def createBorrowing(request, pk):
 def deleteBorrowing(request, pk):
     borrowing = Borrowing.objects.get(id=pk)
     if request.method == "POST":
+	borrowing.tag_id.asset_status = "Available"
+        borrowing.tag_id.asset_status.save()	
         borrowing.delete()
+	 
         return redirect('/subscriber/1')
     context = {'item': borrowing}
     return render(request, 'assetstracking/deleteBorrowing.html',context)
