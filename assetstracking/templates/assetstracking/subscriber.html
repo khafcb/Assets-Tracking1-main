@@ -72,7 +72,7 @@
 				</tr>
 				{% for i in borrowings %}
 				<tr>
-					<td>{{i.employee_id}}</td>
+					<td><a href="{% url 'employee' i.employee_id.id %}">{{i.employee_id}}</a></td>
 					<td>{{i.tag_id}}</td>
 					<td>{{i.start_date}}</td>
 					<td>{{i.end_date}}</td>
