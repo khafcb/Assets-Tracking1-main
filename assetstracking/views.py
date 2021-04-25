@@ -178,8 +178,14 @@ def createBorrowing(request, pk):
 @login_required
 def deleteBorrowing(request, pk):
     borrowing = Borrowing.objects.get(id=pk)
+    tags = Tag.objects.all()
+    tagscount = tags.count()
     if request.method == "POST":
-        borrowing.tag_id.asset_status = "Available"
+        for tag in tags:
+            if borrowing.tag_id == tag:
+                tag.asset_status == "Available"
+                tag.save()
+                break
         borrowing.delete()
         return redirect('/subscriber/1')
     context = {'item': borrowing}
