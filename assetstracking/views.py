@@ -1,5 +1,5 @@
-from django.shortcuts   import render, redirect
-from django.http        import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
@@ -11,11 +11,10 @@ from .models import *
 from .forms import *
 from django.core.mail import send_mail
 
+
 def login(request):
     context = {}
     return render(request, 'assetstracking/login.html', context)
-
-
 
 
 def SendingEmail(request):
@@ -23,24 +22,25 @@ def SendingEmail(request):
     CurrentYear = today.strftime('%Y')
     CurrentMounth = today.strftime('%m')
     CurrentDay = today.strftime('%d')
-    print("CurrentYear: ",CurrentYear)
-    print("CurrentMounth: ",CurrentMounth)
-    print("CurrentDay: ",CurrentDay)
+    print("CurrentYear: ", CurrentYear)
+    print("CurrentMounth: ", CurrentMounth)
+    print("CurrentDay: ", CurrentDay)
     lastDay = Borrowing.objects.values_list('end_date', flat=True)
     DeadlineYear = [x.strftime('%Y') for x in lastDay]
     DeadlineMounth = [x.strftime('%m') for x in lastDay]
     DeadlineDay = [x.strftime('%d') for x in lastDay]
-    print("the list is: ",DeadlineYear)
-    print("the list is: ",DeadlineMounth)
-    print("the list is: ",DeadlineDay)
-    count1=0
+    print("the list is: ", DeadlineYear)
+    print("the list is: ", DeadlineMounth)
+    print("the list is: ", DeadlineDay)
+    count1 = 0
     for i in DeadlineYear:
         CheckValue = 0
         if CurrentYear > DeadlineYear[count1]:
             CheckValue = 1
         if CurrentYear == DeadlineYear[count1] and CurrentMounth > DeadlineMounth[count1]:
             CheckValue = 1
-        if CurrentYear == DeadlineYear[count1] and CurrentMounth == DeadlineMounth[count1] and CurrentDay > DeadlineDay[count1]:
+        if CurrentYear == DeadlineYear[count1] and CurrentMounth == DeadlineMounth[count1] and CurrentDay > DeadlineDay[
+            count1]:
             CheckValue = 1
         if CheckValue == 1:
             send_mail(
@@ -48,36 +48,33 @@ def SendingEmail(request):
                 'One of the employee did not return the asset he borrowed',
                 'AssetsTracking70@gmail.com',
                 ['iyhmx7@gmail.com'],
-                fail_silently=False,)
+                fail_silently=False, )
             print("here")
         count1 = count1 + 1
-
 
     context = {}
     return HttpResponse(" X ")
 
 
 @login_required
-def home(request): 
+def home(request):
     today = date.today()
     lastDay = Borrowing.objects.values('end_date')
-    print("nnnnnnnnnn",lastDay)
+    print("nnnnnnnnnn", lastDay)
     subscriber = Subscriber.objects.all()
-    
+
     total_subscribers = subscriber.count()
 
     borrowing = Borrowing.objects.all()
 
-    context = {'subscriber': subscriber, 'total_subscribers':total_subscribers, 'borrowing':borrowing }
+    context = {'subscriber': subscriber, 'total_subscribers': total_subscribers, 'borrowing': borrowing}
     return render(request, 'assetstracking/home.html', context)
 
 
 @login_required
-def subscriber(request, subscriber_test): 
-
+def subscriber(request, subscriber_test):
     subscriber = Subscriber.objects.get(id=subscriber_test)
 
-	
     borrowings = subscriber.borrowing_set.all()
     borrowing_count = borrowings.count()
 
@@ -87,36 +84,35 @@ def subscriber(request, subscriber_test):
 
     tags = subscriber.tag_set.all()
     tag_count = tags.count()
-    
+
     rfids = subscriber.rfid_set.all()
     rfid_count = rfids.count()
 
     context = {'subscriber': subscriber,
-                'borrowings': borrowings, 'borrowing_count': borrowing_count,
-                'employee': employee, 'employees': employees, 'employee_count': employee_count,
-                'tags': tags , 'tag_count': tag_count,
-                'rfids': rfids , 'rfid_count': rfid_count}
+               'borrowings': borrowings, 'borrowing_count': borrowing_count,
+               'employee': employee, 'employees': employees, 'employee_count': employee_count,
+               'tags': tags, 'tag_count': tag_count,
+               'rfids': rfids, 'rfid_count': rfid_count}
     return render(request, 'assetstracking/subscriber.html', context)
 
+
 @login_required
-def employee(request, employee_test): 
-
+def employee(request, employee_test):
     employee = Employee.objects.get(id=employee_test)
-	
-    borrowings = employee.borrowing_set.all()
 
+    borrowings = employee.borrowing_set.all()
 
     borrowing_count = borrowings.count()
 
-    context = {'employee': employee, 'borrowings': borrowings, 'borrowing_count':borrowing_count}
+    context = {'employee': employee, 'borrowings': borrowings, 'borrowing_count': borrowing_count}
     return render(request, 'assetstracking/employee.html', context)
 
 
-
 @login_required
-def rfid(request): 
+def rfid(request):
     rfid = RFID.objects.all()
     return HttpResponse('RDID reader page')
+
 
 @login_required
 def tags(request, idd):
@@ -126,13 +122,12 @@ def tags(request, idd):
     return render(request, 'assetstracking/tags.html', context)
 
 
-def index(request): 
+def index(request):
     return render(request, 'assetstracking/index.html')
 
 
 @login_required
 def createBorrowing(request, pk):
-
     employee = Employee.objects.get(id=pk)
     BorrowingFormSet = inlineformset_factory(Employee, Borrowing, form=BorrowingForm)
 
@@ -141,8 +136,8 @@ def createBorrowing(request, pk):
 
     formset = BorrowingFormSet(queryset=Borrowing.objects.none(), instance=employee)
     if request.method == 'POST':
-        #print('Printing POST:', request.POST)
-        #form = BorrowingForm(request.POST)
+        # print('Printing POST:', request.POST)
+        # form = BorrowingForm(request.POST)
         formset = BorrowingFormSet(request.POST, instance=employee)
         if formset.is_valid():
             formset.save()
@@ -150,7 +145,7 @@ def createBorrowing(request, pk):
             Borrowings = Borrowing.objects.all()
             borrowingCount = Borrowings.count()
             for b in Borrowings:
-                count +=1
+                count += 1
                 asset_status = b.tag_id.asset_status
                 employee_id_scanned = b.employee_id_scanned
                 asset_id_scanned = b.asset_id_scanned
@@ -170,29 +165,28 @@ def createBorrowing(request, pk):
                         return redirect('/login')
                         break
                     else:
-                        context1= {'items': takenAssets}
+                        context1 = {'items': takenAssets}
                         return render(request, 'assetstracking/takenAssets.html', context1)
                         break
                 else:
                     continue
 
-
-    context = {'formset':formset}
+    context = {'formset': formset}
     return render(request, 'assetstracking/createBorrowing.html', context)
-
 
 
 @login_required
 def deleteBorrowing(request, pk):
     borrowing = Borrowing.objects.get(id=pk)
     if request.method == "POST":
-	borrowing.tag_id.asset_status = "Available"
-	borrowing.tag_id.asset_status.save()
-	borrowing.delete()
-	 
+        borrowing.tag_id.asset_status = "Available"
+        borrowing.tag_id.asset_status.save()
+        borrowing.delete()
         return redirect('/subscriber/1')
     context = {'item': borrowing}
-    return render(request, 'assetstracking/deleteBorrowing.html',context)
+    return render(request, 'assetstracking/deleteBorrowing.html', context)
+
+
 @login_required
 def extendBorrowing(request, pk):
     borrowing = Borrowing.objects.get(id=pk)
@@ -225,6 +219,8 @@ def createAsset(request, asset11):
 
     context = {'formset1': formset1}
     return render(request, 'assetstracking/createAsset.html', context)
+
+
 @login_required
 def updateAsset(request, pk):
     asset = Tag.objects.get(id=pk)
@@ -236,8 +232,10 @@ def updateAsset(request, pk):
             form.save()
             return redirect('/subscriber/1')
 
-    context = {'form':form}
+    context = {'form': form}
     return render(request, 'assetstracking/updateAsset.html', context)
+
+
 @login_required
 def deleteAsset(request, pk):
     asset = Tag.objects.get(id=pk)
@@ -245,7 +243,8 @@ def deleteAsset(request, pk):
         asset.delete()
         return redirect('/subscriber/1')
     context = {'item': asset}
-    return render(request, 'assetstracking/deleteAsset.html',context)
+    return render(request, 'assetstracking/deleteAsset.html', context)
+
 
 @login_required
 def createReader(request, reader):
@@ -265,6 +264,7 @@ def createReader(request, reader):
     context = {'formset1': formset1}
     return render(request, 'assetstracking/createReader.html', context)
 
+
 @login_required
 def updateReader(request, pk):
     reader = RFID.objects.get(id=pk)
@@ -276,8 +276,9 @@ def updateReader(request, pk):
             form.save()
             return redirect('/subscriber/1')
 
-    context = {'form':form}
+    context = {'form': form}
     return render(request, 'assetstracking/updateReader.html', context)
+
 
 @login_required
 def deleteReader(request, pk):
@@ -286,7 +287,7 @@ def deleteReader(request, pk):
         reader.delete()
         return redirect('/subscriber/1')
     context = {'item': reader}
-    return render(request, 'assetstracking/deleteReader.html',context)
+    return render(request, 'assetstracking/deleteReader.html', context)
 
 
 @csrf_exempt
@@ -387,16 +388,17 @@ def packet(request):
                                                 return HttpResponse("scan asset", content_type='text/plain')
                                                 break
                                             else:
-                                                return HttpResponse("no request for employee",content_type='text/plain')
+                                                return HttpResponse("no request for employee",
+                                                                    content_type='text/plain')
                                                 break
 
                                         else:
                                             continue
                                     break
                                 elif count == employees_list_count:
-                                    #print("This is not an employee ID!!")
-                                    #return HttpResponse("not employee id", content_type='text/plain')
-                                    #break
+                                    # print("This is not an employee ID!!")
+                                    # return HttpResponse("not employee id", content_type='text/plain')
+                                    # break
                                     for q in assets_list:
                                         asset_id3 = model_to_dict(q)["tag_id"]
                                         asset_status = model_to_dict(q)["asset_status"]
