@@ -133,43 +133,58 @@ def createBorrowing(request, pk):
 
     takenAssets = []
     count = 0
-
+    z =0
+    list1 = []
+    list2 = set()
     formset = BorrowingFormSet(queryset=Borrowing.objects.none(), instance=employee)
     if request.method == 'POST':
-        # print('Printing POST:', request.POST)
-        # form = BorrowingForm(request.POST)
         formset = BorrowingFormSet(request.POST, instance=employee)
         if formset.is_valid():
             formset.save()
             x = 0
+            y = ""
             Borrowings = Borrowing.objects.all()
             borrowingCount = Borrowings.count()
-            for b in Borrowings:
-                count += 1
-                asset_status = b.tag_id.asset_status
-                employee_id_scanned = b.employee_id_scanned
-                asset_id_scanned = b.asset_id_scanned
-                print(asset_status)
-                print(employee_id_scanned)
-                print(asset_id_scanned)
-                if asset_status == "Taken" and employee_id_scanned == 0 and asset_id_scanned == 0:
-                    b.delete()
-                    takenAssets.append(b.tag_id)
-                    x = 1
-                    if count == borrowingCount:
-                        context1 = {'items': takenAssets}
-                        return render(request, 'assetstracking/takenAssets.html', context1)
-                        break
-                elif count == borrowingCount:
-                    if x == 0:
-                        return redirect('/login')
+            for r in Borrowings:
+                list1.append(str(r.tag_id.asset_name))
+            print("list 1 : " + str(list1))
+            if len(list1) == 1:
+                return redirect('/login')
+            else:
+                for item in list1:
+                    if item in list2:
+                        for b in Borrowings:
+                            count += 1
+                            tag_id = b.tag_id.asset_name
+                            if str(tag_id) == item:
+                                if z == 1:
+                                    takenAssets.append(tag_id)
+                                    b.delete()
+                                    x = 1
+                                    if count == borrowingCount:
+                                        context1 = {'items': takenAssets}
+                                        return render(request, 'assetstracking/takenAssets.html', context1)
+                                        break
+                                z=1
+                            elif count == borrowingCount:
+                                if x == 0:
+                                    return redirect('/login')
+                                    break
+                                else:
+                                    context1 = {'items': takenAssets}
+                                    return render(request, 'assetstracking/takenAssets.html', context1)
+                                    break
+                            else:
+                                continue
                         break
                     else:
-                        context1 = {'items': takenAssets}
-                        return render(request, 'assetstracking/takenAssets.html', context1)
-                        break
-                else:
-                    continue
+                        list2.add(item)
+                        print("lsit 2 : " + str(list2))
+            return redirect('/login')
+
+
+
+
 
     context = {'formset': formset}
     return render(request, 'assetstracking/createBorrowing.html', context)
