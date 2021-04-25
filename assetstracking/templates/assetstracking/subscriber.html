@@ -65,6 +65,9 @@
 					<th>Asset</th>
 					<th>Start Date</th>
 					<th>End Date</th>
+					<th>Employee ID Scan checker</th>
+					<th>Asset ID Scan checker</th>
+					<th>Reader Where the asset was scanned</th>
 					<th>Extend</th>
 					<th>Remove</th>
 				</tr>
@@ -75,6 +78,9 @@
 					<td>{{i.tag_id}}</td>
 					<td>{{i.start_date}}</td>
 					<td>{{i.end_date}}</td>
+					<td>{{i.employee_id_scanned}}</td>
+					<td>{{i.asset_id_scanned}}</td>
+					<td>{{i.reader_code}}</td>
 					<td><a class="btn btn-sm btn-info" href="{% url 'extendBorrowing' i.id %}">extend</a></td>
 					<td><a class="btn btn-sm btn-danger" href="{% url 'deleteBorrowing' i.id %}">Remove</a></td>
 				</tr>
