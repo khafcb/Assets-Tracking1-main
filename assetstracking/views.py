@@ -130,7 +130,7 @@ def index(request):
 def createBorrowing(request, pk):
     employee = Employee.objects.get(id=pk)
     BorrowingFormSet = inlineformset_factory(Employee, Borrowing, form=BorrowingForm)
-
+    count1 = 0
     takenAssets = []
     count = 0
     z =0
@@ -148,41 +148,50 @@ def createBorrowing(request, pk):
             for r in Borrowings:
                 list1.append(str(r.tag_id.asset_name))
             print("list 1 : " + str(list1))
-            if len(list1) == 1:
+            print("list 2 before entring the for loop : " + str(list2))
+            print("borrowings count : " + str(borrowingCount))
+            list1_len = len(list1)
+            if list1_len == 1:
                 return redirect('/login')
             else:
                 for item in list1:
+                    count1 +=1
+                    print("count1 : " + str(count1))
                     if item in list2:
                         for b in Borrowings:
                             count += 1
+                            print("count : " + str(count))
                             tag_id = b.tag_id.asset_name
                             if str(tag_id) == item:
                                 if z == 1:
-                                    takenAssets.append(tag_id)
+                                    print(b.tag_id.asset_name)
+                                    print(b.employee_id.employee_name)
                                     b.delete()
+                                    takenAssets.append(tag_id)
                                     x = 1
-                                    if count == borrowingCount:
-                                        context1 = {'items': takenAssets}
-                                        return render(request, 'assetstracking/takenAssets.html', context1)
-                                        break
-                                z=1
-                            elif count == borrowingCount:
-                                if x == 0:
-                                    return redirect('/login')
+                                    Borrowings = Borrowing.objects.all()
+                                    borrowingCount = Borrowings.count()
+                                    count = 0
+                                    z = 0
                                     break
-                                else:
-                                    context1 = {'items': takenAssets}
-                                    return render(request, 'assetstracking/takenAssets.html', context1)
-                                    break
+                                z = 1
                             else:
                                 continue
-                        break
+                        if count1 == list1_len:
+                            context1 = {'items': takenAssets}
+                            return render(request, 'assetstracking/takenAssets.html', context1)
+                            break
+                    elif count1 == list1_len:
+                        if x == 1:
+                            context1 = {'items' : takenAssets}
+                            return render(request, 'assetstracking/takenAssets.html', context1)
+                            break
+                        else:
+                            return redirect('/login')
+                            break
+
                     else:
                         list2.add(item)
-                        print("lsit 2 : " + str(list2))
-            return redirect('/login')
-
-
 
 
 
